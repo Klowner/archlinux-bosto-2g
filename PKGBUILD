@@ -6,12 +6,12 @@ pkgver=r64.18d3fd0
 pkgrel=1
 arch=('i686' 'x86_64')
 url="https://github.com/aidyw/bosto-2g-linux-kernel-module"
-license=('GPL')
+license=('GPL3')
 makedepends=('dkms' 'linux-headers')
 source=("$_pkgname::git+https://github.com/klowner/bosto-2g-linux-kernel-module.git#branch=granular-makefile"
         "dkms.conf")
 md5sums=('SKIP'
-         '715dd64d5ee324b4dd781fc5649b2d2f')
+         '233d2a579d1450bb728b755037559e26')
 
 pkgver() {
 	cd ${srcdir}/$_pkgname
@@ -25,13 +25,20 @@ build_() {
 
 package() {
 	# Copy dkms.conf
-	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/dkms.conf
+	install -Dm644 ${srcdir}/dkms.conf "${pkgdir}/usr/src/${_pkgname}-${pkgver}"/dkms.conf
 	sed -e "s/@_PKGNAME@/${_pkgname//-/_}/" \
 		-e "s/@PKGVER@/${pkgver}/" \
-		-i "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/dkms.conf
+		-i "${pkgdir}/usr/src/${_pkgname}-${pkgver}"/dkms.conf
+
+	# Copy utilities
+	for x in inputtransform load_bosto_2g.sh; do
+		install -Dm755 ${srcdir}/${_pkgname}/$x "${pkgdir}/usr/bin/${x}"
+	done
+
+	# udev rules
+	install -Dm644 "${srcdir}/${_pkgname}/${_pkgname//-/_}.rules" "${pkgdir}"/usr/lib/udev/rules.d/65-${_pkgname}.rules
+	sed -e "s/\/usr\/local\/bin/\/usr\/bin/" -i "${pkgdir}"/usr/lib/udev/rules.d/65-${_pkgname}.rules
 
 	# Copy sources
-	cp -r ${srcdir}/${_pkgname}/* "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/
+	cp -r ${srcdir}/${_pkgname}/{Makefile,bosto_2g.c} "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/
 }
-md5sums=('SKIP'
-         '233d2a579d1450bb728b755037559e26')
