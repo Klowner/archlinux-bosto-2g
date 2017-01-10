@@ -35,10 +35,10 @@ package() {
 		install -Dm755 ${srcdir}/${_pkgname}/$x "${pkgdir}/usr/bin/${x}"
 	done
 
-	# udev rules
+	# Copy udev rules
 	install -Dm644 "${srcdir}/${_pkgname}/${_pkgname//-/_}.rules" "${pkgdir}"/usr/lib/udev/rules.d/65-${_pkgname}.rules
 	sed -e "s/\/usr\/local\/bin/\/usr\/bin/" -i "${pkgdir}"/usr/lib/udev/rules.d/65-${_pkgname}.rules
 
-	# Copy sources
+	# Copy (relevant) sources
 	cp -r ${srcdir}/${_pkgname}/{Makefile,bosto_2g.c} "${pkgdir}"/usr/src/${_pkgname}-${pkgver}/
 }
