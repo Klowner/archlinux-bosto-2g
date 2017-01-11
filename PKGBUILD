@@ -18,7 +18,7 @@ pkgver() {
 	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
 }
 
-build_() {
+build() {
 	cd ${srcdir}/$_pkgname
 	make detach_usbhid
 }
@@ -30,9 +30,12 @@ package() {
 		-e "s/@PKGVER@/${pkgver}/" \
 		-i "${pkgdir}/usr/src/${_pkgname}-${pkgver}"/dkms.conf
 
+	#install -Dm755 ${srcdir}/$_pkgname/detach_usbhid "${pkgdir}/usr/bin"
+
 	# Copy utilities
-	for x in inputtransform load_bosto_2g.sh; do
+	for x in detach_usbhid inputtransform load_bosto_2g.sh; do
 		install -Dm755 ${srcdir}/${_pkgname}/$x "${pkgdir}/usr/bin/${x}"
+		sed -e 's/\/usr\/local\/bin/\/usr\/bin/g' -i "${pkgdir}/usr/bin/${x}"
 	done
 
 	# Copy udev rules
