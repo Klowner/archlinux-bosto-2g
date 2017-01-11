@@ -2,13 +2,13 @@
 # Contributor: Mark Riedesel <mark@klowner.com>
 pkgname=(bosto-2g-dkms)
 _pkgname=${pkgname%-*}
-pkgver=r64.18d3fd0
+pkgver=r65.ddc0652
 pkgrel=1
 arch=('i686' 'x86_64')
 url="https://github.com/aidyw/bosto-2g-linux-kernel-module"
 license=('GPL3')
 makedepends=('dkms' 'linux-headers')
-source=("$_pkgname::git+https://github.com/klowner/bosto-2g-linux-kernel-module.git#branch=granular-makefile"
+source=("$_pkgname::git+https://github.com/klowner/bosto-2g-linux-kernel-module.git#branch=mp22-dabbling"
         "dkms.conf")
 md5sums=('SKIP'
          '233d2a579d1450bb728b755037559e26')
